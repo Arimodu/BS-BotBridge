@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33402.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BS-BotBridge Core", "BS-BotBridge Core\BS-BotBridge Core.csproj", "{0A6484E8-126E-4568-8344-0E9318AF092B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BS-BotBridge Shared", "BS-BotBridge Shared\BS-BotBridge Shared.csproj", "{6B1729EB-243B-4408-A43E-31CAA2D61C75}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A6484E8-126E-4568-8344-0E9318AF092B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A6484E8-126E-4568-8344-0E9318AF092B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A6484E8-126E-4568-8344-0E9318AF092B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A6484E8-126E-4568-8344-0E9318AF092B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B1729EB-243B-4408-A43E-31CAA2D61C75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B1729EB-243B-4408-A43E-31CAA2D61C75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B1729EB-243B-4408-A43E-31CAA2D61C75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B1729EB-243B-4408-A43E-31CAA2D61C75}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD7C78F4-5270-4918-890C-F8DF032F0699}
+	EndGlobalSection
+EndGlobal

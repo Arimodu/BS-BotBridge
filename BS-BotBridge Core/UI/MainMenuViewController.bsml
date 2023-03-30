@@ -1,0 +1,14 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'
+	>
+	<vertical child-control-height='false'>
+		<horizontal horizontal-fit='PreferredSize'>
+			<grid cell-size-y='9' cell-size-x='36' spacing-x='2' spacing-y='2'>
+				<macro.for-each items='buttons'>
+					<button id='menu-button' pref-width='36' pref-height='9' text='~text' on-click='button-click'></button>
+				</macro.for-each>
+			</grid>
+		</horizontal>
+	</vertical>
+
+</bg>
