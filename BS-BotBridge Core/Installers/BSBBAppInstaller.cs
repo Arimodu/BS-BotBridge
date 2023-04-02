@@ -1,10 +1,5 @@
 ﻿using BS_BotBridge_Core.Configuration;
 using BS_BotBridge_Core.Managers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Zenject;
 
 namespace BS_BotBridge_Core.Installers
@@ -12,17 +7,20 @@ namespace BS_BotBridge_Core.Installers
     internal class BSBBAppInstaller : Installer
     {
         private readonly PluginConfig _config;
+        private readonly BSBBModuleManager _moduleManager;
 
-        internal BSBBAppInstaller(PluginConfig config)
+        internal BSBBAppInstaller(PluginConfig config, BSBBModuleManager moduleManager)
         {
             _config = config;
+            _moduleManager = moduleManager; 
         }
 
         public override void InstallBindings()
         {
             Container.BindInstance(_config);
             Container.Bind<Client>().AsSingle();
-            Container.BindInterfacesAndSelfTo<ModuleManager>().AsSingle();
+            Container.BindInstance(_moduleManager).AsSingle();
+            Container.QueueForInject(_moduleManager);
         }
     }
 }

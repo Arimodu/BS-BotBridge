@@ -120,7 +120,7 @@
     <Compile Include="Client.cs" />
     <Compile Include="Installers\BSBBAppInstaller.cs" />
     <Compile Include="Installers\BSBBMenuInstaller.cs" />
-    <Compile Include="Managers\ModuleManager.cs" />
+    <Compile Include="Managers\BSBBModuleManager.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Configuration\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -147,10 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BS-BotBridge Shared\BS-BotBridge Shared.csproj">
-      <Project>{6b1729eb-243b-4408-a43e-31caa2d61c75}</Project>
+      <Project>{1ca546a7-c9c0-47e6-97d6-67906f79c870}</Project>
       <Name>BS-BotBridge Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

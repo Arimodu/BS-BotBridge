@@ -18,7 +18,7 @@ namespace BS_BotBridge_Core
         private readonly SiraLog logger;
         private readonly string address;
         private readonly int port;
-        private ModuleManager _moduleManager;
+        private BSBBModuleManager _moduleManager;
 
         public Client(SiraLog siraLog, PluginConfig config)
         {
@@ -52,7 +52,11 @@ namespace BS_BotBridge_Core
             {
                 string json = JsonConvert.SerializeObject(packet);
                 byte[] data = Encoding.UTF8.GetBytes(json);
-                stream.Write(data, 0, data.Length);
+
+                lock (stream)
+                {
+                    stream.Write(data, 0, data.Length);
+                }
             }
             catch (Exception e)
             {
@@ -79,9 +83,9 @@ namespace BS_BotBridge_Core
         }
 
         /// <summary>
-        /// Yes, this creates a circular dependency, do I care? NO I DONT. Fuck pretty code
+        /// Yes, this creates a circular dependency, do I care? NO. Fuck maintainability, this is my bonfire
         /// </summary>
-        internal void CreateCircularDependency(ModuleManager moduleManager)
+        internal void CreateCircularDependency(BSBBModuleManager moduleManager)
         {
             _moduleManager = moduleManager;
         }
