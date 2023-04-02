@@ -120,12 +120,12 @@
     <Compile Include="Client.cs" />
     <Compile Include="Installers\BSBBAppInstaller.cs" />
     <Compile Include="Installers\BSBBMenuInstaller.cs" />
+    <Compile Include="Managers\ModuleManager.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Configuration\PluginConfig.cs" />
-    <Compile Include="BS_BotBridge_CoreController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\BSBBFlowCoordinator.cs" />
-    <Compile Include="UI\MainMenuViewController.cs" />
+    <Compile Include="UI\BSBBViewController.cs" />
     <Compile Include="Managers\SettingsControllerManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -134,8 +134,8 @@
   <ItemGroup>
     <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
     <None Include="BS_BotBridge_Core.csproj.user" Condition="Exists('BS_BotBridge_Core.csproj.user')" />
-    <EmbeddedResource Include="UI\MainMenuViewController.bsml">
-      <DependentUpon>MainMenuViewController.cs</DependentUpon>
+    <EmbeddedResource Include="UI\BSBBViewController.bsml">
+      <DependentUpon>BSBBViewController.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using BS_BotBridge_Core.Configuration;
+using BS_BotBridge_Core.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace BS_BotBridge_Core.Installers
         public override void InstallBindings()
         {
             Container.BindInstance(_config);
+            Container.Bind<Client>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ModuleManager>().AsSingle();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BS_BotBridge_Core.UI
 {
     internal class BSBBFlowCoordinator : FlowCoordinator
     {
-        protected ViewController _mainMenuViewController;
+        protected ViewController _bSBBViewController;
 
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
@@ -20,11 +20,11 @@ namespace BS_BotBridge_Core.UI
                 SetTitle("Bot Bridge Settings");
                 showBackButton = true;
 
-                if (_mainMenuViewController == null)
+                if (_bSBBViewController == null)
                 {
-                    _mainMenuViewController = BeatSaberUI.CreateViewController<UI.MainMenuViewController>();
+                    _bSBBViewController = BeatSaberUI.CreateViewController<UI.BSBBViewController>();
                 }
-                ProvideInitialViewControllers(_mainMenuViewController);
+                ProvideInitialViewControllers(_bSBBViewController);
             }
         }
 

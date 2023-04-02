@@ -1,36 +1,48 @@
-﻿using BS_BotBridge_Shared.Packets;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
+using SiraUtil.Logging;
+using BS_BotBridge_Core.Configuration;
+using BS_BotBridge_Shared;
+using BS_BotBridge_Core.Managers;
 
 namespace BS_BotBridge_Core
 {
     public class Client
     {
         private readonly TcpClient client;
-        private readonly NetworkStream stream;
-        private readonly byte[] buffer;
-        private readonly IPA.Logging.Logger Logger;
+        private NetworkStream stream;
+        private byte[] buffer;
+        private readonly SiraLog logger;
+        private readonly string address;
+        private readonly int port;
+        private ModuleManager _moduleManager;
 
-        public Dictionary<string, Action<object>> _moduleCallbacks = new Dictionary<string, Action<object>>();
-
-        public Client(string address, int port, IPA.Logging.Logger logger)
+        public Client(SiraLog siraLog, PluginConfig config)
         {
-            Logger = logger;
+            logger = siraLog;
+            client = new TcpClient();
+            address = config.ServerAddress;
+            port = config.ServerPort;
+        }
+
+        public void Start()
+        {
+            if (address == null || port == 0) return;
+            if (client.Connected) return;
+
             try
             {
-                client = new TcpClient(address, port);
+                client.Connect(address, port);
                 stream = client.GetStream();
                 buffer = new byte[client.ReceiveBufferSize];
                 stream.BeginRead(buffer, 0, buffer.Length, OnDataReceived, null);
             }
             catch (SocketException e)
             {
-                Logger.Error($"Failed to connect to server: {e.Message}");
+                logger.Error($"Failed to connect to server: {e.Message}");
             }
         }
 
@@ -44,7 +56,7 @@ namespace BS_BotBridge_Core
             }
             catch (Exception e)
             {
-                Logger.Error($"Failed to send data to server: {e.Message}");
+                logger.Error($"Failed to send data to server: {e.Message}");
             }
         }
 
@@ -56,17 +68,22 @@ namespace BS_BotBridge_Core
                 string json = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                 Packet packet = JsonConvert.DeserializeObject<Packet>(json);
 
-                foreach (var item in _moduleCallbacks)
-                {
-
-                }
+                _moduleManager.GetModule(packet.TargetModule).RecievePacket(packet);
 
                 stream.BeginRead(buffer, 0, buffer.Length, OnDataReceived, null);
             }
             catch (Exception e)
             {
-                Logger.Error($"Failed to receive data from server: {e.Message}");
+                logger.Error($"Failed to receive data from server: {e.Message}");
             }
+        }
+
+        /// <summary>
+        /// Yes, this creates a circular dependency, do I care? NO I DONT. Fuck pretty code
+        /// </summary>
+        internal void CreateCircularDependency(ModuleManager moduleManager)
+        {
+            _moduleManager = moduleManager;
         }
     }
 }
