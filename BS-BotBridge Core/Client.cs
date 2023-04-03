@@ -1,15 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using SiraUtil.Logging;
 using BS_BotBridge_Core.Configuration;
-using BS_BotBridge_Shared;
+using BSBBLib;
 using BS_BotBridge_Core.Managers;
 
 namespace BS_BotBridge_Core
 {
+    // Todo: Implements better socket error handling
+    // Maybe leave it up to the sending module??
     public class Client
     {
         private readonly TcpClient client;
@@ -18,14 +19,18 @@ namespace BS_BotBridge_Core
         private readonly SiraLog logger;
         private readonly string address;
         private readonly int port;
-        private BSBBModuleManager _moduleManager;
+        private readonly BSBBModuleManager _moduleManager;
 
-        public Client(SiraLog siraLog, PluginConfig config)
+        public Client(SiraLog siraLog, BSBBCoreConfig config, BSBBModuleManager moduleManager)
         {
             logger = siraLog;
             client = new TcpClient();
             address = config.ServerAddress;
             port = config.ServerPort;
+
+            // Yes, this creates a circular dependency, do I care? NO.
+            // Fuck maintainability, this is my bonfire
+            _moduleManager = moduleManager;
         }
 
         public void Start()
@@ -80,14 +85,6 @@ namespace BS_BotBridge_Core
             {
                 logger.Error($"Failed to receive data from server: {e.Message}");
             }
-        }
-
-        /// <summary>
-        /// Yes, this creates a circular dependency, do I care? NO. Fuck maintainability, this is my bonfire
-        /// </summary>
-        internal void CreateCircularDependency(BSBBModuleManager moduleManager)
-        {
-            _moduleManager = moduleManager;
         }
     }
 }

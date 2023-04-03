@@ -25,6 +25,9 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Debug\BS-BotBridge Core.xml</DocumentationFile>
+    <DebugType>embedded</DebugType>
+    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
@@ -120,13 +123,14 @@
     <Compile Include="Client.cs" />
     <Compile Include="Installers\BSBBAppInstaller.cs" />
     <Compile Include="Installers\BSBBMenuInstaller.cs" />
+    <Compile Include="Installers\BSBBModuleManagerInitializer.cs" />
     <Compile Include="Managers\BSBBModuleManager.cs" />
+    <Compile Include="Managers\SettingsControllerManager.cs" />
     <Compile Include="Plugin.cs" />
-    <Compile Include="Configuration\PluginConfig.cs" />
+    <Compile Include="Configuration\BSBBCoreConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\BSBBFlowCoordinator.cs" />
     <Compile Include="UI\BSBBViewController.cs" />
-    <Compile Include="Managers\SettingsControllerManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
@@ -137,6 +141,7 @@
     <EmbeddedResource Include="UI\BSBBViewController.bsml">
       <DependentUpon>BSBBViewController.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Directory.Build.targets" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BeatSaberModdingTools.Tasks">
@@ -146,9 +151,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BS-BotBridge Shared\BS-BotBridge Shared.csproj">
-      <Project>{1ca546a7-c9c0-47e6-97d6-67906f79c870}</Project>
-      <Name>BS-BotBridge Shared</Name>
+    <ProjectReference Include="..\BSBBLib\BSBBLib.csproj">
+      <Project>{7d2cf96d-2443-4125-aa53-b962307fc52a}</Project>
+      <Name>BSBBLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

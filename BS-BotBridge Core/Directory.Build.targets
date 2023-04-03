@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<Target Name="CopyBSBBLib" AfterTargets="BSMT_CopyToPlugins">
+		<Message Text="Target: CopyBSBBLLib" Importance="high"/>
+		<Message Text="Configuration: '$(Configuration)'" Importance="high"/>
+		<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+			<Message Text="Copying debug BSBBLib.dll to Libs" Importance="high"/>
+			<OutputCopy Include="bin\Debug\BSBBLib.dll" OutputPath="Libs\BSBBLib.dll" />
+			<OutputCopy Include="bin\Debug\BSBBLib.pdb" OutputPath="Libs\BSBBLib.pdb" />
+			<Message Text="Copied debug BSBBLib.dll" Importance="high"/>
+		</ItemGroup>
+		<ItemGroup Condition="'$(Configuration)' == 'Release'">
+			<Message Text="Copying release BSBBLib.dll to Libs" Importance="high"/>
+			<OutputCopy Include="bin\Release\BSBBLib.dll" OutputPath="Libs\BSBBLib.dll" />
+			<Message Text="Copied release BSBBLib.dll" Importance="high"/>
+		</ItemGroup>
+		<Message Text="End of target" Importance="high"/>
+	</Target>
+</Project>

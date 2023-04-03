@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BS-BotBridge Shared")]
+[assembly: AssemblyTitle("BSBBLib")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BS-BotBridge Shared")]
+[assembly: AssemblyProduct("BSBBLib")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1ca546a7-c9c0-47e6-97d6-67906f79c870")]
+[assembly: Guid("7d2cf96d-2443-4125-aa53-b962307fc52a")]
 
 // Version information for an assembly consists of the following four values:
 //

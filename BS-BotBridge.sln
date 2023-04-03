@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33402.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BS-BotBridge Core", "BS-BotBridge Core\BS-BotBridge Core.csproj", "{0A6484E8-126E-4568-8344-0E9318AF092B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BS-BotBridge Shared", "BS-BotBridge Shared\BS-BotBridge Shared.csproj", "{1CA546A7-C9C0-47E6-97D6-67906F79C870}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSBBLib", "BSBBLib\BSBBLib.csproj", "{7D2CF96D-2443-4125-AA53-B962307FC52A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{0A6484E8-126E-4568-8344-0E9318AF092B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A6484E8-126E-4568-8344-0E9318AF092B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A6484E8-126E-4568-8344-0E9318AF092B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1CA546A7-C9C0-47E6-97D6-67906F79C870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1CA546A7-C9C0-47E6-97D6-67906F79C870}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1CA546A7-C9C0-47E6-97D6-67906F79C870}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1CA546A7-C9C0-47E6-97D6-67906F79C870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D2CF96D-2443-4125-AA53-B962307FC52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D2CF96D-2443-4125-AA53-B962307FC52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D2CF96D-2443-4125-AA53-B962307FC52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D2CF96D-2443-4125-AA53-B962307FC52A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

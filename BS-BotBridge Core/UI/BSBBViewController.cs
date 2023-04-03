@@ -1,10 +1,6 @@
-﻿using BeatSaberMarkupLanguage;
-using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Components;
+﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
-using System;
 using System.Collections.Generic;
-
 
 namespace BS_BotBridge_Core.UI
 {
@@ -12,12 +8,12 @@ namespace BS_BotBridge_Core.UI
     [ViewDefinition("BS_BotBridge_Core.UI.BSBBViewController.bsml")]
     internal class BSBBViewController : BSMLAutomaticViewController
     {
-        [UIValue("buttons")]
-        //private List<object> btns = Plugin.GetModuleButtonsList(); // "Theoretically", this shouldnt be called before the list is complete
+        private readonly List<object> _buttons = new List<object>();
 
-        [UIAction("#post-parse")]
-        internal void PostParse()
+        [UIValue("buttons")]
+        internal List<object> Buttons
         {
+            get { return _buttons; }
         }
     }
 }

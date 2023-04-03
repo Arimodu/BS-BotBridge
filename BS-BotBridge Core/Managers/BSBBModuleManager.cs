@@ -1,31 +1,38 @@
-﻿using BS_BotBridge_Shared;
+﻿using BSBBLib;
 using SiraUtil.Logging;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zenject;
 
 namespace BS_BotBridge_Core.Managers
 {
-    internal class BSBBModuleManager
+    public class BSBBModuleManager
     {
         private readonly Dictionary<string, IModule> _modules = new Dictionary<string, IModule>();
         private SiraLog _logger;
         private Client _client;
 
         [Inject]
-        public void InjectDependencies(Client client, SiraLog logger)
+        internal void InjectDependencies(Client client, SiraLog logger)
         {
             _client = client;
             _logger = logger;
-            _client?.CreateCircularDependency(this); // Yes, this does exactly what it says it does. I dont care
+        }
 
-            if (_modules.Count == 0) 
+        public void Initialize()
+        {
+            _logger.Info("BSBB Initializing modules...");
+            if (_modules.Count == 0)
+            {
                 _logger.Warn("No modules loaded, this mod does nothing on its own!");
+                return;
+            }
 
             foreach (var module in _modules.Values)
             {
                 module.Initialize(_client.Send);
             }
+            _logger.Info("BSBB modules initialized");
         }
 
         /// <summary>
@@ -47,5 +54,11 @@ namespace BS_BotBridge_Core.Managers
         {
             return _modules.TryGetValue(identifier, out var module) ? module : null;
         }
+
+        /// <summary>
+        /// Gets an array of all registered modules
+        /// </summary>
+        /// <returns>An array of all registered modules</returns>
+        public IModule[] GetModules() => _modules.Values.ToArray();
     }
 }

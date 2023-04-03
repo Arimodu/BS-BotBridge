@@ -4,9 +4,9 @@ using IPA.Config.Stores;
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
 namespace BS_BotBridge_Core.Configuration
 {
-    public class PluginConfig
+    public class BSBBCoreConfig
     {
-        public static PluginConfig Instance { get; set; }
+        public static BSBBCoreConfig Instance { get; set; }
         public virtual bool EnableConnection { get; set; } = false;
         public virtual string ServerAddress { get; set; } = "localhost";
         public virtual int ServerPort { get; set; } = 7227;
@@ -30,7 +30,7 @@ namespace BS_BotBridge_Core.Configuration
         /// <summary>
         /// Call this to have BSIPA copy the values from <paramref name="other"/> into this config.
         /// </summary>
-        public virtual void CopyFrom(PluginConfig other)
+        public virtual void CopyFrom(BSBBCoreConfig other)
         {
             EnableConnection = other.EnableConnection;
             ServerAddress = other.ServerAddress;
