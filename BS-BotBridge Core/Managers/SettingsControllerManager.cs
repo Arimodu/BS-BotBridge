@@ -12,7 +12,7 @@ namespace BS_BotBridge_Core.Managers
     // Basically stolen from HSV
     internal class SettingsControllerManager : IInitializable, IDisposable
     {
-        private FlowCoordinator _menuFlowCoordinator;
+        private readonly FlowCoordinator _menuFlowCoordinator;
 
         private MenuButton _bbButton;
 

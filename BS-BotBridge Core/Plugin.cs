@@ -26,8 +26,9 @@ namespace BS_BotBridge_Core
             zenject.UseLogger(logger);
             zenject.UseMetadataBinder<Plugin>();
 
-            zenject.Install<BSBBAppInstaller>(Location.App, conf.Generated<BSBBCoreConfig>(), _moduleManager);
-            zenject.Install<BSBBMenuInstaller>(Location.Menu);
+            var config = conf.Generated<BSBBCoreConfig>();
+            zenject.Install<BSBBAppInstaller>(Location.App, config, _moduleManager);
+            zenject.Install<BSBBMenuInstaller>(Location.Menu, config);
         }
 
         private object ConstructManager(object previous, ParameterInfo param, PluginMetadata meta)

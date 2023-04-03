@@ -2,11 +2,6 @@
 using BeatSaberMarkupLanguage.MenuButtons;
 using BS_BotBridge_Core.Managers;
 using HMUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Zenject;
 
 namespace BS_BotBridge_Core.UI
@@ -14,6 +9,7 @@ namespace BS_BotBridge_Core.UI
     internal class BSBBFlowCoordinator : FlowCoordinator, IInitializable
     {
         protected BSBBViewController _bSBBViewController;
+        protected BSBBCoreViewController _bSBBCoreViewController;
         private BSBBModuleManager _moduleManager;
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
@@ -27,10 +23,11 @@ namespace BS_BotBridge_Core.UI
         }
 
         [Inject]
-        internal void InjectDependencies(BSBBViewController viewController, BSBBModuleManager moduleManager)
+        internal void InjectDependencies(BSBBViewController viewController, BSBBCoreViewController coreViewController, BSBBModuleManager moduleManager)
         {
             _bSBBViewController = viewController;
             _moduleManager = moduleManager;
+            _bSBBCoreViewController = coreViewController;
         }
 
         public void Initialize()
@@ -61,13 +58,15 @@ namespace BS_BotBridge_Core.UI
             }
         }
 
-        private void CoreButtonWasPressed()
-        {
-            //PresentViewController();
-        }
+        private void CoreButtonWasPressed() => PresentViewController(_bSBBCoreViewController, animationDirection: ViewController.AnimationDirection.Vertical);
 
         protected override void BackButtonWasPressed(ViewController topViewController)
         {
+            if (topViewController == _bSBBCoreViewController)
+            {
+                DismissViewController(topViewController);
+                return;
+            }
             BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this);
         }
     }

@@ -13,28 +13,52 @@ namespace BS_BotBridge_Core
     // Maybe leave it up to the sending module??
     public class Client
     {
-        private readonly TcpClient client;
+        private TcpClient client;
         private NetworkStream stream;
         private byte[] buffer;
+        private string address;
+        private int port;
         private readonly SiraLog logger;
-        private readonly string address;
-        private readonly int port;
         private readonly BSBBModuleManager _moduleManager;
+        private readonly BSBBCoreConfig _config;
 
         public Client(SiraLog siraLog, BSBBCoreConfig config, BSBBModuleManager moduleManager)
         {
             logger = siraLog;
             client = new TcpClient();
-            address = config.ServerAddress;
-            port = config.ServerPort;
+            _config = config;
+            address = _config.ServerAddress;
+            port = _config.ServerPort;
 
             // Yes, this creates a circular dependency, do I care? NO.
             // Fuck maintainability, this is my bonfire
             _moduleManager = moduleManager;
+
+            _config.OnChanged += Config_OnChanged;
+        }
+
+        private void Config_OnChanged()
+        {
+            // First check if the parameters have changed
+            if (address != _config.ServerAddress) address = _config.ServerAddress;
+            if (port != _config.ServerPort) port = _config.ServerPort;
+
+            // If we are connected and we dont want to be, disconnect
+            if (client.Connected && !_config.ConnectionEnalbed)
+            {
+                client.Close();
+
+                // Prepare new TcpClient for the next connection
+                client = new TcpClient();
+            }
+
+            // If we are disconnected and want to connect, start
+            if (!client.Connected && _config.ConnectionEnalbed) Start();
         }
 
         public void Start()
         {
+            if (!_config.ConnectionEnalbed) return;
             if (address == null || port == 0) return;
             if (client.Connected) return;
 

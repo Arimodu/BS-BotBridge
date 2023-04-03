@@ -1,8 +1,9 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
 	xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'
 	>
-	<horizontal horizontal-fit="PreferredSize" >
-		<text text='Message:' />
-		<text text="~YourTextProperty" />
-	</horizontal>
+	<vertical child-align='UpperLeft'>
+		<bool-setting text='Connection Enabled' id='ConnectionEnabled' hover-hint='Enables connection to server (duh). Also enables autoconnection on startup' />
+		<string-setting text='Address or Domain Name' value='Address' apply-on-change='true' />
+		<string-setting text='Port' value='Port' apply-on-change='true' />
+	</vertical>
 </bg>
