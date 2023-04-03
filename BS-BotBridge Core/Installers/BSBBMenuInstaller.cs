@@ -7,12 +7,6 @@ namespace BS_BotBridge_Core.Installers
 {
     internal sealed class BSBBMenuInstaller : Installer
     {
-        private BSBBCoreConfig _config;
-        public BSBBMenuInstaller(BSBBCoreConfig config) 
-        { 
-            _config = config;
-        }
-
         public override void InstallBindings()
         {
             Container.Bind<BSBBViewController>().FromNewComponentAsViewController().AsSingle();

@@ -1,11 +1,7 @@
-﻿using BeatSaberMarkupLanguage;
-using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Components;
+﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BS_BotBridge_Core.Configuration;
 using SiraUtil.Logging;
-using System;
-using System.Collections.Generic;
 using Zenject;
 
 namespace BS_BotBridge_Core.UI
@@ -19,7 +15,6 @@ namespace BS_BotBridge_Core.UI
         [Inject]
         public void InjectDependencies(BSBBCoreConfig config, SiraLog logger)
         {
-            logger.Info("Injecting deps into " + typeof(BSBBCoreViewController).FullName);
             _config = config;
             ConnectionEnabled = _config.ConnectionEnalbed;
             Address = _config.ServerAddress;
