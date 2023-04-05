@@ -8,8 +8,8 @@ namespace BS_BotBridge_Core.Configuration
     public class BSBBCoreConfig
     {
         public static BSBBCoreConfig Instance { get; set; }
-        public virtual bool ConnectionEnalbed { get; set; } = false;
-        public virtual string ServerAddress { get; set; } = "localhost";
+        public virtual bool ConnectionEnabled { get; set; } = false;
+        public virtual string ServerAddress { get; set; } = "127.0.0.1";
         public virtual int ServerPort { get; set; } = 7227;
 
         public event Action OnChanged;
@@ -35,7 +35,7 @@ namespace BS_BotBridge_Core.Configuration
         /// </summary>
         public virtual void CopyFrom(BSBBCoreConfig other)
         {
-            ConnectionEnalbed = other.ConnectionEnalbed;
+            ConnectionEnabled = other.ConnectionEnabled;
             ServerAddress = other.ServerAddress;
             ServerPort = other.ServerPort;
         }

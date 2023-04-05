@@ -6,72 +6,135 @@ using SiraUtil.Logging;
 using BS_BotBridge_Core.Configuration;
 using BSBBLib;
 using BS_BotBridge_Core.Managers;
+using Zenject;
+using BSBBLib.Interfaces;
+using System.Threading.Tasks;
 
 namespace BS_BotBridge_Core
 {
     // Todo: Implements better socket error handling
     // Maybe leave it up to the sending module??
-    public class Client
+    public class Client : IClient, IInitializable
     {
-        private TcpClient client;
-        private NetworkStream stream;
-        private byte[] buffer;
-        private string address;
-        private int port;
-        private readonly SiraLog logger;
+        private TcpClient _client;
+        private NetworkStream _stream;
+        private byte[] _buffer;
+        private string _address;
+        private int _port;
+        private ConnectionState _state;
+        private readonly SiraLog _logger;
         private readonly BSBBModuleManager _moduleManager;
         private readonly BSBBCoreConfig _config;
 
-        public Client(SiraLog siraLog, BSBBCoreConfig config, BSBBModuleManager moduleManager)
+        public event Action<ConnectionState> OnStateChanged;
+        public ConnectionState State 
         {
-            logger = siraLog;
-            client = new TcpClient();
+            get => _state;
+            private set 
+            {
+                _state = value;
+                OnStateChanged?.Invoke(value);
+            }
+        }
+
+        internal Client(SiraLog siraLog, BSBBCoreConfig config, BSBBModuleManager moduleManager)
+        {
+            _logger = siraLog;
+            _client = new TcpClient();
             _config = config;
-            address = _config.ServerAddress;
-            port = _config.ServerPort;
+            _address = _config.ServerAddress;
+            _port = _config.ServerPort;
+
+            // We havent even tried to connect, so by default, we are disabled
+            State = ConnectionState.Disabled;
 
             // Yes, this creates a circular dependency, do I care? NO.
             // Fuck maintainability, this is my bonfire
             _moduleManager = moduleManager;
 
+
             _config.OnChanged += Config_OnChanged;
+        }
+
+        public void Initialize()
+        {
+            if (_config.ConnectionEnabled) Start();
         }
 
         private void Config_OnChanged()
         {
             // First check if the parameters have changed
-            if (address != _config.ServerAddress) address = _config.ServerAddress;
-            if (port != _config.ServerPort) port = _config.ServerPort;
+            bool isInstanceDirty = false;
+            if (_address != _config.ServerAddress || _port != _config.ServerPort)
+            {
+                _address = _config.ServerAddress;
+                _port = _config.ServerPort;
+                isInstanceDirty = true;
+
+                // Log only when we want to be connected, otherwise there is no point to reloading
+                if (_config.ConnectionEnabled) _logger.Warn("BSBB Client instance marked dirty. It will be reloaded soon");
+            }
 
             // If we are connected and we dont want to be, disconnect
-            if (client.Connected && !_config.ConnectionEnalbed)
+            // Or if marked dirty and connected
+            if ((_client.Connected && !_config.ConnectionEnabled) || isInstanceDirty && _client.Connected)
             {
-                client.Close();
+                _stream.Close();
+                _client.Close();
+                State = ConnectionState.Disabled;
+
+                _logger.Info("BSBB Client disconnected");
 
                 // Prepare new TcpClient for the next connection
-                client = new TcpClient();
+                _client = new TcpClient();
             }
 
             // If we are disconnected and want to connect, start
-            if (!client.Connected && _config.ConnectionEnalbed) Start();
+            if (!_client.Connected && _config.ConnectionEnabled) Start();
         }
 
-        public void Start()
+        // Patchover work so I dont run this on UI thread
+        internal void Start()
         {
-            if (!_config.ConnectionEnalbed) return;
-            if (address == null || port == 0) return;
-            if (client.Connected) return;
+            _ = StartAsync();
+        }
+
+        private async Task StartAsync()
+        {
+            if (_client.Connected || State == ConnectionState.Connecting) return;
+
+            if (!_config.ConnectionEnabled)
+            {
+                State = ConnectionState.Disabled;
+                return;
+            }
+
+            State = ConnectionState.Connecting;
+            _logger.Info("Connecting to BSBB server...");
+
+            if (_address == null || _port == 0)
+            {
+                State = ConnectionState.Errored;
+                _logger.Error($"Failed to connect to server: Malformed address {_address} or port {_port}, please check your configuration");
+                return;
+            }
 
             try
             {
-                client.Connect(address, port);
-                stream = client.GetStream();
-                buffer = new byte[client.ReceiveBufferSize];
-                stream.BeginRead(buffer, 0, buffer.Length, OnDataReceived, null);
+                await _client.ConnectAsync(_address, _port);
+                _stream = _client.GetStream();
+                _buffer = new byte[_client.ReceiveBufferSize];
+                _stream.BeginRead(_buffer, 0, _buffer.Length, OnDataReceived, null);
+                State = ConnectionState.Connected;
+                _logger.Info($"Successfully connected to BSBB server at {_address}:{_port}");
             }
             catch (SocketException e)
             {
-                logger.Error($"Failed to connect to server: {e.Message}");
+                _logger.Error($"Failed to connect to server: {e.Message}");
+
+                // Disable connection if we fail
+                _config.ConnectionEnabled = false;
+                State = ConnectionState.Errored;
             }
         }
 
@@ -79,17 +142,20 @@ namespace BS_BotBridge_Core
         {
             try
             {
+                _logger.Debug($"Sending {packet.CorePacketType} for {packet.TargetModule} module");
                 string json = JsonConvert.SerializeObject(packet);
                 byte[] data = Encoding.UTF8.GetBytes(json);
+                _logger.Debug($"Sending {data.Length} bytes of data to {_client.Client.RemoteEndPoint}");
 
-                lock (stream)
+                lock (_stream)
                 {
-                    stream.Write(data, 0, data.Length);
+                    _stream.Write(data, 0, data.Length);
                 }
             }
             catch (Exception e)
             {
-                logger.Error($"Failed to send data to server: {e.Message}");
+                _logger.Error($"Failed to send data to server: {e.Message}");
+                State = ConnectionState.Errored; // Not exactly sure what this can throw, so I wont put socket realoding here
             }
         }
 
@@ -97,18 +163,37 @@ namespace BS_BotBridge_Core
         {
             try
             {
-                int bytesRead = stream.EndRead(result);
-                string json = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                int bytesRead = _stream.EndRead(result);
+                _logger.Debug($"Recieved {bytesRead} bytes from {_client.Client.RemoteEndPoint}");
+                string json = Encoding.UTF8.GetString(_buffer, 0, bytesRead);
                 Packet packet = JsonConvert.DeserializeObject<Packet>(json);
+                _logger.Debug($"Recieved data parsed as {packet.CorePacketType} for {packet.TargetModule} module");
 
-                _moduleManager.GetModule(packet.TargetModule).RecievePacket(packet);
+                if (packet.CorePacketType == PacketType.Heartbeat) SendHeartbeat();
+                else if (packet.CorePacketType == PacketType.CoreData)
+                {
+                    // Whatever the fuck I might use this in the future
+                    // Does nohting for the time being
+                }
+                else if (packet.CorePacketType == PacketType.ModuleData) _moduleManager.GetModule(packet.TargetModule).RecievePacket(packet);
+                else _logger.Error("Recieved malformed packet from server");
 
-                stream.BeginRead(buffer, 0, buffer.Length, OnDataReceived, null);
+                _stream.BeginRead(_buffer, 0, _buffer.Length, OnDataReceived, null);
             }
             catch (Exception e)
             {
-                logger.Error($"Failed to receive data from server: {e.Message}");
+                _logger.Error($"Failed to receive data from server: {e.Message}");
+                State = ConnectionState.Errored; // Not exactly sure what this can throw, so I wont put socket realoding here
             }
+        }
+
+        private void SendHeartbeat()
+        {
+            // Send heartbeat packet
+            string json = JsonConvert.SerializeObject("Pong");
+            var data = Encoding.UTF8.GetBytes(json);
+            var packet = new Packet("Core", data, type: PacketType.Heartbeat);
+            Send(packet);
         }
     }
 }

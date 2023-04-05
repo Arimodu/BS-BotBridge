@@ -19,7 +19,7 @@ namespace BS_BotBridge_Core.Installers
         {
             Container.BindInstance(_config).AsSingle();
             Container.BindInstance(_moduleManager).AsSingle();
-            Container.Bind<Client>().AsSingle();
+            Container.BindInterfacesAndSelfTo<Client>().AsSingle();
             Container.QueueForInject(_moduleManager);
             Container.BindInterfacesAndSelfTo<BSBBModuleManagerInitializer>().AsSingle().NonLazy();
         }

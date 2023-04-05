@@ -41,11 +41,11 @@ namespace BS_BotBridge_Core.UI
             {
                 MenuButton button;
 
-                var flowCoordinator = module.GetModuleFlowCoordinator();
-                var displayText = module.GetDisplayName();
+                var flowCoordinator = module.FlowCoordinator;
+                var displayText = module.DisplayName;
                 if (flowCoordinator == null || displayText == null) continue;
 
-                var hoverText = module.GetHoverText();
+                var hoverText = module.HoverText;
                 if (hoverText == null)
                 {
                     button = new MenuButton(displayText, () => PresentFlowCoordinator(flowCoordinator));

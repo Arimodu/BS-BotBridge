@@ -1,4 +1,4 @@
-﻿using BSBBLib;
+﻿using BSBBLib.Interfaces;
 using SiraUtil.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace BS_BotBridge_Core.Managers
 
             foreach (var module in _modules.Values)
             {
-                module.Initialize(_client.Send);
+                module.Initialize(_client);
             }
             _logger.Info("BSBB modules initialized");
         }

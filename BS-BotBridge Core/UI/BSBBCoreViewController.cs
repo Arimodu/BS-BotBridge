@@ -1,4 +1,5 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BS_BotBridge_Core.Configuration;
 using SiraUtil.Logging;
@@ -13,10 +14,10 @@ namespace BS_BotBridge_Core.UI
         private BSBBCoreConfig _config;
 
         [Inject]
-        public void InjectDependencies(BSBBCoreConfig config, SiraLog logger)
+        public void InjectDependencies(BSBBCoreConfig config)
         {
             _config = config;
-            ConnectionEnabled = _config.ConnectionEnalbed;
+            ConnectionEnabled = _config.ConnectionEnabled;
             Address = _config.ServerAddress;
             Port = _config.ServerPort.ToString();
             NotifyPropertyChanged(nameof(ConnectionEnabled));
@@ -28,7 +29,7 @@ namespace BS_BotBridge_Core.UI
 
         private void Config_OnChanged()
         {
-            ConnectionEnabled = _config.ConnectionEnalbed;
+            ConnectionEnabled = _config.ConnectionEnabled;
             Address = _config.ServerAddress;
             Port = _config.ServerPort.ToString();
             NotifyPropertyChanged(nameof(ConnectionEnabled));
@@ -37,6 +38,7 @@ namespace BS_BotBridge_Core.UI
         }
 
         private bool _connectionEnabled = false;
+        [UIValue("ConnectionEnabled")]
         public bool ConnectionEnabled
         {
             get { return _connectionEnabled; }
@@ -45,10 +47,13 @@ namespace BS_BotBridge_Core.UI
                 if (value == _connectionEnabled) return;
                 _connectionEnabled = value;
                 NotifyPropertyChanged(nameof(ConnectionEnabled));
-                _config.ConnectionEnalbed = value;
+                _config.ConnectionEnabled = value;
                 _config.Changed();
             }
         }
+
+        [UIComponent("ConnectionEnabled")]
+        private ToggleSetting ConnectionEnabledToggle;
 
         private string _address = "Config error";
         public string Address 
