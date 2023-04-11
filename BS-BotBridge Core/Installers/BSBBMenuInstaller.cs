@@ -1,7 +1,6 @@
 ﻿using Zenject;
 using BS_BotBridge_Core.UI;
 using BS_BotBridge_Core.Managers;
-using BS_BotBridge_Core.Configuration;
 
 namespace BS_BotBridge_Core.Installers
 {
@@ -9,9 +8,9 @@ namespace BS_BotBridge_Core.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<BSBBViewController>().FromNewComponentAsViewController().AsSingle();
+            Container.Bind<BSBBMainViewController>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<BSBBCoreViewController>().FromNewComponentAsViewController().AsSingle();
-            Container.BindInterfacesAndSelfTo<BSBBFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.Bind<BSBBCoreFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesTo<SettingsControllerManager>().AsSingle();
         }
     }

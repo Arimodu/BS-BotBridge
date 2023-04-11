@@ -52,9 +52,6 @@ namespace BS_BotBridge_Core.UI
             }
         }
 
-        [UIComponent("ConnectionEnabled")]
-        private ToggleSetting ConnectionEnabledToggle;
-
         private string _address = "Config error";
         public string Address 
         { 

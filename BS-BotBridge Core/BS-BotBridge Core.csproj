@@ -130,8 +130,8 @@
     <Compile Include="Configuration\BSBBCoreConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\BSBBCoreViewController.cs" />
-    <Compile Include="UI\BSBBFlowCoordinator.cs" />
-    <Compile Include="UI\BSBBViewController.cs" />
+    <Compile Include="UI\BSBBCoreFlowCoordinator.cs" />
+    <Compile Include="UI\BSBBMainViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
@@ -139,8 +139,8 @@
   <ItemGroup>
     <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
     <None Include="BS_BotBridge_Core.csproj.user" Condition="Exists('BS_BotBridge_Core.csproj.user')" />
-    <EmbeddedResource Include="UI\BSBBViewController.bsml">
-      <DependentUpon>BSBBViewController.cs</DependentUpon>
+    <EmbeddedResource Include="UI\BSBBMainViewController.bsml">
+      <DependentUpon>BSBBMainViewController.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Directory.Build.targets" />
     <EmbeddedResource Include="UI\BSBBCoreViewController.bsml">

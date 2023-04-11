@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace BS_BotBridge_Core.UI
 {
-    [HotReload(RelativePathToLayout = @"BSBBViewController.bsml")]
-    [ViewDefinition("BS_BotBridge_Core.UI.BSBBViewController.bsml")]
-    internal class BSBBViewController : BSMLAutomaticViewController
+    [HotReload(RelativePathToLayout = @"BSBBMainViewController.bsml")]
+    [ViewDefinition("BS_BotBridge_Core.UI.BSBBMainViewController.bsml")]
+    internal class BSBBMainViewController : BSMLAutomaticViewController
     {
         private readonly List<object> _buttons = new List<object>();
 
@@ -14,6 +14,11 @@ namespace BS_BotBridge_Core.UI
         internal List<object> Buttons
         {
             get { return _buttons; }
+        }
+
+        internal void NotifyButtonCollectionReloaded()
+        {
+            NotifyPropertyChanged(nameof(Buttons));
         }
     }
 }

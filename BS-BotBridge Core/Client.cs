@@ -4,11 +4,14 @@ using System.Net.Sockets;
 using System.Text;
 using SiraUtil.Logging;
 using BS_BotBridge_Core.Configuration;
+using BSBBLib.Packets;
 using BSBBLib;
 using BS_BotBridge_Core.Managers;
 using Zenject;
 using BSBBLib.Interfaces;
 using System.Threading.Tasks;
+using static BSBBLib.SharedValues;
+using System.Threading;
 
 namespace BS_BotBridge_Core
 {
@@ -25,6 +28,8 @@ namespace BS_BotBridge_Core
         private readonly SiraLog _logger;
         private readonly BSBBModuleManager _moduleManager;
         private readonly BSBBCoreConfig _config;
+        private Timer _pingTimer;
+        private DateTime _lastPingReceived;
 
         public event Action<ConnectionState> OnStateChanged;
         public ConnectionState State 
@@ -45,8 +50,8 @@ namespace BS_BotBridge_Core
             _address = _config.ServerAddress;
             _port = _config.ServerPort;
 
-            // We havent even tried to connect, so by default, we are disabled
-            State = ConnectionState.Disabled;
+            if (_config.ConnectionEnabled) State = ConnectionState.Disconnected;
+            else State = ConnectionState.Disabled;
 
             // Yes, this creates a circular dependency, do I care? NO.
             // Fuck maintainability, this is my bonfire
@@ -78,24 +83,27 @@ namespace BS_BotBridge_Core
             // If we are connected and we dont want to be, disconnect
             // Or if marked dirty and connected
             if ((_client.Connected && !_config.ConnectionEnabled) || isInstanceDirty && _client.Connected)
+                Disconnect();
+
+            // If we are disconnected and want to connect, reconnect
+            if (!_client.Connected && _config.ConnectionEnabled)
             {
-                _stream.Close();
-                _client.Close();
-                State = ConnectionState.Disabled;
-
-                _logger.Info("BSBB Client disconnected");
-
-                // Prepare new TcpClient for the next connection
-                _client = new TcpClient();
+                // We want to connect, so we are not disabled anymore
+                if (State == ConnectionState.Disabled) State = ConnectionState.Disconnected;
+                Reconnect();
             }
-
-            // If we are disconnected and want to connect, start
-            if (!_client.Connected && _config.ConnectionEnabled) Start();
         }
 
-        // Patchover work so I dont run this on UI thread
+        // Patchover work so I dont run init on UI thread
         internal void Start()
         {
+            _ = StartAsync();
+        }
+
+        public void Reconnect()
+        {
+            if (State == ConnectionState.Disabled || _client.Connected) return;
+            if (State == ConnectionState.Errored) State = ConnectionState.Disconnected;
             _ = StartAsync();
         }
 
@@ -109,10 +117,13 @@ namespace BS_BotBridge_Core
                 return;
             }
 
+            // If we are errored, dont reconnect until error is resolved (or game is realoded)
+            if (State == ConnectionState.Errored) return;
+
             State = ConnectionState.Connecting;
             _logger.Info("Connecting to BSBB server...");
 
-            if (_address == null || _port == 0)
+            if (_address == null || _port == 0 || _port > 65535)
             {
                 State = ConnectionState.Errored;
                 _logger.Error($"Failed to connect to server: Malformed address {_address} or port {_port}, please check your configuration");
@@ -127,15 +138,29 @@ namespace BS_BotBridge_Core
                 _stream.BeginRead(_buffer, 0, _buffer.Length, OnDataReceived, null);
                 State = ConnectionState.Connected;
                 _logger.Info($"Successfully connected to BSBB server at {_address}:{_port}");
+
+                // Start heartbeat timer and reset time
+                _pingTimer = new Timer(CheckHeartbeat, null, HeartbeatInterval, HeartbeatInterval);
+                _lastPingReceived = DateTime.UtcNow;
             }
             catch (SocketException e)
             {
                 _logger.Error($"Failed to connect to server: {e.Message}");
 
-                // Disable connection if we fail
-                _config.ConnectionEnabled = false;
                 State = ConnectionState.Errored;
             }
+        }
+
+        internal void Disconnect()
+        {
+            _pingTimer.Dispose();
+            _client.Close();
+            State = ConnectionState.Disconnected;
+
+            _logger.Info("BSBB Client disconnected");
+
+            // Prepare new TcpClient for the next connection
+            _client = new TcpClient();
         }
 
         public void Send(Packet packet)
@@ -154,6 +179,7 @@ namespace BS_BotBridge_Core
             }
             catch (Exception e)
             {
+                if (State == ConnectionState.Disabled) return;
                 _logger.Error($"Failed to send data to server: {e.Message}");
                 State = ConnectionState.Errored; // Not exactly sure what this can throw, so I wont put socket realoding here
             }
@@ -172,16 +198,17 @@ namespace BS_BotBridge_Core
                 if (packet.CorePacketType == PacketType.Heartbeat) SendHeartbeat();
                 else if (packet.CorePacketType == PacketType.CoreData)
                 {
-                    // Whatever the fuck I might use this in the future
+                    // Whatever the fuck I might use this for in the future
                     // Does nohting for the time being
                 }
-                else if (packet.CorePacketType == PacketType.ModuleData) _moduleManager.GetModule(packet.TargetModule).RecievePacket(packet);
+                else if (packet.CorePacketType == PacketType.ModuleData) _moduleManager.FindAndGetModule(packet.TargetModule).RecievePacket(packet);
                 else _logger.Error("Recieved malformed packet from server");
 
                 _stream.BeginRead(_buffer, 0, _buffer.Length, OnDataReceived, null);
             }
             catch (Exception e)
             {
+                if (State == ConnectionState.Disabled) return;
                 _logger.Error($"Failed to receive data from server: {e.Message}");
                 State = ConnectionState.Errored; // Not exactly sure what this can throw, so I wont put socket realoding here
             }
@@ -189,11 +216,26 @@ namespace BS_BotBridge_Core
 
         private void SendHeartbeat()
         {
-            // Send heartbeat packet
+            // Since we recieved a ping, set last ping to now
+            _lastPingReceived = DateTime.Now;
+
+            // Respond to heartbeat packet
             string json = JsonConvert.SerializeObject("Pong");
             var data = Encoding.UTF8.GetBytes(json);
             var packet = new Packet("Core", data, type: PacketType.Heartbeat);
             Send(packet);
+        }
+
+        private void CheckHeartbeat(object state)
+        {
+            var now = DateTime.UtcNow;
+
+            // Check if we received a pong recently
+            if ((now - _lastPingReceived) > HeartbeatTimeout)
+            {
+                _logger.Error($"Closing connection due to heartbeat timeout: {_client.Client.RemoteEndPoint}");
+                Disconnect();
+            }
         }
     }
 }

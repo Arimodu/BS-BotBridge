@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using BSBBLib.Packets;
+using static BSBBLib.SharedValues;
 
 namespace BSBBLib
 {
@@ -20,8 +22,6 @@ namespace BSBBLib
         private readonly Action<string> _logger;
         private readonly CancellationTokenSource _cts;
         private Timer _hearbeatTimer;
-        private readonly int _heartbeatInterval = 5000;
-        private readonly int _heartbeatTimeout = 10000;
         private DateTime _lastPongReceived;
 
         public event Action<Packet> OnDataReceived;
@@ -94,7 +94,7 @@ namespace BSBBLib
             {
                 _logger.Invoke($"Error while stopping server: {e.Message}");
             }
-            _logger.Invoke("Stopped BSBB server...");
+            _logger.Invoke("Stopped BSBB server");
         }
 
         private void AcceptConnection(TcpClient client)
@@ -105,13 +105,14 @@ namespace BSBBLib
             _stream.BeginRead(_buffer, 0, _buffer.Length, ReceiveCallback, null);
 
             // Start heartbeat
-            _hearbeatTimer = new Timer(Heartbeat, null, 0, _heartbeatInterval);
+            _hearbeatTimer = new Timer(Heartbeat, null, HeartbeatInterval, HeartbeatInterval);
             _lastPongReceived = DateTime.UtcNow;
         }
 
         private void CloseConnection(TcpClient client)
         {
             _logger.Invoke($"Closing connection: {client.Client.RemoteEndPoint}");
+            _hearbeatTimer.Dispose();
             client?.Close();
         }
 
@@ -120,16 +121,15 @@ namespace BSBBLib
             var now = DateTime.UtcNow;
 
             // Check if we received a pong recently
-            if ((now - _lastPongReceived).TotalMilliseconds > _heartbeatTimeout)
+            if ((now - _lastPongReceived) > HeartbeatTimeout)
             {
                 _logger.Invoke($"Closing connection due to heartbeat timeout: {_client.Client.RemoteEndPoint}");
-                _hearbeatTimer.Dispose();
                 CloseConnection(_client);
                 return;
             }
 
             // Send heartbeat packet
-            _logger.Invoke($"Sending Heartbeat to {_client.Client.RemoteEndPoint}");
+            _logger.Invoke($"Sending Heartbeat to Client");
             string json = JsonConvert.SerializeObject("Ping");
             var data = Encoding.UTF8.GetBytes(json);
             var packet = new Packet("Core", data, type: PacketType.Heartbeat);
@@ -151,7 +151,7 @@ namespace BSBBLib
                     // Handle heartbeat
                     if (packet.CorePacketType == PacketType.Heartbeat)
                     {
-                        _logger.Invoke($"Recieved heartbeat from {_client.Client.RemoteEndPoint}");
+                        _logger.Invoke($"Recieved heartbeat from Client");
                         _lastPongReceived = DateTime.UtcNow;
                     }
                     else if (packet.CorePacketType == PacketType.CoreData)
@@ -167,6 +167,12 @@ namespace BSBBLib
                     {
                         _logger.Invoke($"Recieved malformed packet from {_client.Client.RemoteEndPoint}. Discarding...");
                     }
+                }
+                else if (bytesRead == 0)
+                {
+                    _logger.Invoke($"Recieved 0 bytes from stream. Assuming client disconnected");
+                    CloseConnection(_client);
+                    return;
                 }
                 _stream.BeginRead(_buffer, 0, _buffer.Length, ReceiveCallback, null);
             }

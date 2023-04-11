@@ -12,11 +12,11 @@ namespace BS_BotBridge_Core.Managers
     // Basically stolen from HSV
     internal class SettingsControllerManager : IInitializable, IDisposable
     {
-        private readonly FlowCoordinator _menuFlowCoordinator;
+        private readonly BSBBCoreFlowCoordinator _menuFlowCoordinator;
 
         private MenuButton _bbButton;
 
-        public SettingsControllerManager(UBinder<Plugin, PluginMetadata> pluginMetadata, BSBBFlowCoordinator flowCoordinator)
+        public SettingsControllerManager(UBinder<Plugin, PluginMetadata> pluginMetadata, BSBBCoreFlowCoordinator flowCoordinator)
         {
             _menuFlowCoordinator = flowCoordinator;
 
@@ -31,6 +31,8 @@ namespace BS_BotBridge_Core.Managers
         private void OnMenuButtonPressed()
         {
             if (_menuFlowCoordinator == null) return;
+            // Yes, this might cause lag when opening the menu, but I have no idea how to do it differently because I know batshit about zenject
+            if (!_menuFlowCoordinator.ButtonsInitialized) _menuFlowCoordinator.SetupButtons();
             BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinatorOrAskForTutorial(_menuFlowCoordinator);
         }
 

@@ -1,16 +1,26 @@
 ﻿using BSBBLib.Interfaces;
 using SiraUtil.Logging;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using Zenject;
 
 namespace BS_BotBridge_Core.Managers
 {
     public class BSBBModuleManager
     {
-        private readonly Dictionary<string, IModule> _modules = new Dictionary<string, IModule>();
         private SiraLog _logger;
         private Client _client;
+        public readonly Dictionary<string, IModule> Modules = new Dictionary<string, IModule>();
+
+        /// <summary>
+        /// Invoked when modules are initialized
+        /// </summary>
+        public event Action OnModulesInitialized;
+
+        /// <summary>
+        /// True if module initialization finished
+        /// </summary>
+        public bool ModuleInitFinished = false;
 
         [Inject]
         internal void InjectDependencies(Client client, SiraLog logger)
@@ -22,16 +32,19 @@ namespace BS_BotBridge_Core.Managers
         public void Initialize()
         {
             _logger.Info("BSBB Initializing modules...");
-            if (_modules.Count == 0)
+            if (Modules.Count == 0)
             {
-                _logger.Warn("No modules loaded, this mod does nothing on its own!");
+                _logger.Warn("No modules were registered, this mod does nothing on its own!");
+                _logger.Warn("You can find more modules on the official BSBB website: https://bsbb.arimodu.com/modules");
                 return;
             }
 
-            foreach (var module in _modules.Values)
+            foreach (var module in Modules.Values)
             {
                 module.Initialize(_client);
             }
+            OnModulesInitialized?.Invoke();
+            ModuleInitFinished = true;
             _logger.Info("BSBB modules initialized");
         }
 
@@ -42,7 +55,7 @@ namespace BS_BotBridge_Core.Managers
         /// <param name="module">Your module class implementing the IModule interface</param>
         public void RegisterModule(string name, IModule module)
         {
-            _modules.Add(name, module);
+            Modules.Add(name, module);
         }
 
         /// <summary>
@@ -50,15 +63,9 @@ namespace BS_BotBridge_Core.Managers
         /// </summary>
         /// <param name="identifier">String identifier unique for the requested module</param>
         /// <returns>IModule interface of requsted module or null if not found</returns>
-        public IModule GetModule(string identifier)
+        public IModule FindAndGetModule(string identifier)
         {
-            return _modules.TryGetValue(identifier, out var module) ? module : null;
+            return Modules.TryGetValue(identifier, out var module) ? module : null;
         }
-
-        /// <summary>
-        /// Gets an array of all registered modules
-        /// </summary>
-        /// <returns>An array of all registered modules</returns>
-        public IModule[] GetModules() => _modules.Values.ToArray();
     }
 }

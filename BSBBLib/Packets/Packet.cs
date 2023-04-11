@@ -1,24 +1,7 @@
 ﻿using System;
 
-namespace BSBBLib
+namespace BSBBLib.Packets
 {
-    // Not exactly sure where to put this
-    // So now its here, out of the way kinda
-    public enum ConnectionState
-    {
-        Connecting,
-        Connected,
-        Disabled,
-        Errored
-    }
-
-    public enum PacketType
-    {
-        Heartbeat,
-        CoreData,
-        ModuleData
-    }
-
     /// <summary>
     /// A basic packet structure
     /// </summary>
