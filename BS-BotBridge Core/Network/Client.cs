@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Net.Sockets;
 using System.Text;
-using SiraUtil.Logging;
-using BS_BotBridge_Core.Configuration;
-using BSBBLib.Packets;
-using BSBBLib;
-using BS_BotBridge_Core.Managers;
-using Zenject;
-using BSBBLib.Interfaces;
-using System.Threading.Tasks;
-using static BSBBLib.SharedValues;
 using System.Threading;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using BSBBCore;
+using BSBBCore.Configuration;
+using BSBBCore.Network.Packets;
+using BSBBCore.Managers;
+using BSBBCore.Interfaces;
+using SiraUtil.Logging;
+using Zenject;
+using static BSBBCore.SharedValues;
 
-namespace BS_BotBridge_Core
+namespace BS_BotBridge_Core.Network
 {
     // Todo: Implements better socket error handling
     // Maybe leave it up to the sending module??
@@ -32,10 +32,10 @@ namespace BS_BotBridge_Core
         private DateTime _lastPingReceived;
 
         public event Action<ConnectionState> OnStateChanged;
-        public ConnectionState State 
+        public ConnectionState State
         {
             get => _state;
-            private set 
+            private set
             {
                 _state = value;
                 OnStateChanged?.Invoke(value);
@@ -82,7 +82,7 @@ namespace BS_BotBridge_Core
 
             // If we are connected and we dont want to be, disconnect
             // Or if marked dirty and connected
-            if ((_client.Connected && !_config.ConnectionEnabled) || isInstanceDirty && _client.Connected)
+            if (_client.Connected && !_config.ConnectionEnabled || isInstanceDirty && _client.Connected)
                 Disconnect();
 
             // If we are disconnected and want to connect, reconnect
@@ -231,7 +231,7 @@ namespace BS_BotBridge_Core
             var now = DateTime.UtcNow;
 
             // Check if we received a pong recently
-            if ((now - _lastPingReceived) > HeartbeatTimeout)
+            if (now - _lastPingReceived > HeartbeatTimeout)
             {
                 _logger.Error($"Closing connection due to heartbeat timeout: {_client.Client.RemoteEndPoint}");
                 Disconnect();

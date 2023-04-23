@@ -8,7 +8,7 @@
     <ProjectGuid>{0A6484E8-126E-4568-8344-0E9318AF092B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BS_BotBridge_Core</RootNamespace>
+    <RootNamespace>BSBBCore</RootNamespace>
     <AssemblyName>BS-BotBridge Core</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -120,15 +120,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
+    <Compile Include="Interfaces\IClient.cs" />
+    <Compile Include="Interfaces\IModule.cs" />
+    <Compile Include="Network\Client.cs" />
     <Compile Include="Installers\BSBBAppInstaller.cs" />
     <Compile Include="Installers\BSBBMenuInstaller.cs" />
     <Compile Include="Installers\BSBBModuleManagerInitializer.cs" />
     <Compile Include="Managers\BSBBModuleManager.cs" />
     <Compile Include="Managers\SettingsControllerManager.cs" />
+    <Compile Include="Network\Packets\Packet.cs" />
+    <Compile Include="Network\Server.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Configuration\BSBBCoreConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SharedValues.cs" />
     <Compile Include="UI\BSBBCoreViewController.cs" />
     <Compile Include="UI\BSBBCoreFlowCoordinator.cs" />
     <Compile Include="UI\BSBBMainViewController.cs" />
@@ -153,12 +158,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BSBBLib\BSBBLib.csproj">
-      <Project>{7d2cf96d-2443-4125-aa53-b962307fc52a}</Project>
-      <Name>BSBBLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

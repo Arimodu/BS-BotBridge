@@ -1,8 +1,9 @@
-﻿using BS_BotBridge_Core.Configuration;
-using BS_BotBridge_Core.Managers;
+﻿using BS_BotBridge_Core.Network;
+using BSBBCore.Configuration;
+using BSBBCore.Managers;
 using Zenject;
 
-namespace BS_BotBridge_Core.Installers
+namespace BSBBCore.Installers
 {
     internal class BSBBAppInstaller : Installer
     {

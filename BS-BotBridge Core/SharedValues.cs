@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace BSBBLib
+namespace BSBBCore
 {
     public enum ConnectionState
     {
@@ -17,14 +17,6 @@ namespace BSBBLib
         Heartbeat,
         CoreData,
         ModuleData
-    }
-
-    public enum ChatPacketType
-    {
-        TwitchMessage,
-        TwitchEvent,
-        YoutubeMessage,
-        YoutubeEvent,
     }
 
     public static class SharedValues

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BSBBLib.Packets
+namespace BSBBCore.Network.Packets
 {
     /// <summary>
     /// A basic packet structure

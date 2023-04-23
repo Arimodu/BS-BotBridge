@@ -3,15 +3,16 @@ using IPA.Config.Stores;
 using IPALogger = IPA.Logging.Logger;
 using Config = IPA.Config.Config;
 using SiraUtil.Zenject;
-using BS_BotBridge_Core.Configuration;
-using BS_BotBridge_Core.Installers;
+using BSBBCore.Configuration;
+using BSBBCore.Installers;
 using IPA.Loader;
-using BS_BotBridge_Core.Managers;
+using BSBBCore.Managers;
 using System.Reflection;
 
-namespace BS_BotBridge_Core
+namespace BSBBCore
 {
     [Plugin(RuntimeOptions.SingleStartInit)]
+    [NoEnableDisable]
     public class Plugin
     {
         private BSBBModuleManager _moduleManager;

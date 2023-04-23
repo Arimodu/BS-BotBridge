@@ -1,13 +1,13 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
-using BS_BotBridge_Core.Managers;
-using BSBBLib.Interfaces;
+using BSBBCore.Managers;
+using BSBBCore.Interfaces;
 using HMUI;
 using SiraUtil.Logging;
 using System;
 using Zenject;
 
-namespace BS_BotBridge_Core.UI
+namespace BSBBCore.UI
 {
     internal class BSBBCoreFlowCoordinator : FlowCoordinator
     {

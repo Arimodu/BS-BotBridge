@@ -1,13 +1,13 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
-using BS_BotBridge_Core.UI;
+using BSBBCore.UI;
 using HMUI;
 using IPA.Loader;
 using SiraUtil.Zenject;
 using System;
 using Zenject;
 
-namespace BS_BotBridge_Core.Managers
+namespace BSBBCore.Managers
 {
     // Basically stolen from HSV
     internal class SettingsControllerManager : IInitializable, IDisposable

@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33402.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BS-BotBridge Core", "BS-BotBridge Core\BS-BotBridge Core.csproj", "{0A6484E8-126E-4568-8344-0E9318AF092B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSBBLib", "BSBBLib\BSBBLib.csproj", "{7D2CF96D-2443-4125-AA53-B962307FC52A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F1C23F3-A98D-4A60-8099-79FA4613A6A6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -24,10 +22,6 @@ Global
 		{0A6484E8-126E-4568-8344-0E9318AF092B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A6484E8-126E-4568-8344-0E9318AF092B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A6484E8-126E-4568-8344-0E9318AF092B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D2CF96D-2443-4125-AA53-B962307FC52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D2CF96D-2443-4125-AA53-B962307FC52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D2CF96D-2443-4125-AA53-B962307FC52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D2CF96D-2443-4125-AA53-B962307FC52A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0DB9C531-884C-4349-A399-C386FBA74115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0DB9C531-884C-4349-A399-C386FBA74115}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DB9C531-884C-4349-A399-C386FBA74115}.Release|Any CPU.ActiveCfg = Release|Any CPU

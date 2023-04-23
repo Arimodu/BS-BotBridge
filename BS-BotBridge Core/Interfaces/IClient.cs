@@ -1,7 +1,7 @@
 ﻿using System;
-using BSBBLib.Packets;
+using BSBBCore.Network.Packets;
 
-namespace BSBBLib.Interfaces
+namespace BSBBCore.Interfaces
 {
     public interface IClient
     {

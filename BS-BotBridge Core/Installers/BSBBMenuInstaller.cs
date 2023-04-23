@@ -1,8 +1,8 @@
 ﻿using Zenject;
-using BS_BotBridge_Core.UI;
-using BS_BotBridge_Core.Managers;
+using BSBBCore.UI;
+using BSBBCore.Managers;
 
-namespace BS_BotBridge_Core.Installers
+namespace BSBBCore.Installers
 {
     internal sealed class BSBBMenuInstaller : Installer
     {

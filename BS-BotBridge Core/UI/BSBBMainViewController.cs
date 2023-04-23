@@ -2,7 +2,7 @@
 using BeatSaberMarkupLanguage.ViewControllers;
 using System.Collections.Generic;
 
-namespace BS_BotBridge_Core.UI
+namespace BSBBCore.UI
 {
     [HotReload(RelativePathToLayout = @"BSBBMainViewController.bsml")]
     [ViewDefinition("BS_BotBridge_Core.UI.BSBBMainViewController.bsml")]

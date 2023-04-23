@@ -1,11 +1,11 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.ViewControllers;
-using BS_BotBridge_Core.Configuration;
+using BSBBCore.Configuration;
 using SiraUtil.Logging;
 using Zenject;
 
-namespace BS_BotBridge_Core.UI
+namespace BSBBCore.UI
 {
     [HotReload(RelativePathToLayout = @"BSBBCoreViewController.bsml")]
     [ViewDefinition("BS_BotBridge_Core.UI.BSBBCoreViewController.bsml")]

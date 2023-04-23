@@ -1,14 +1,14 @@
-﻿using System.Net.Sockets;
-using System.Net;
+﻿using System;
 using System.Text;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
-using System;
-using BSBBLib.Packets;
-using static BSBBLib.SharedValues;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using BSBBCore.Network.Packets;
+using static BSBBCore.SharedValues;
 
-namespace BSBBLib
+namespace BSBBCore.Network
 {
     public class Server
     {

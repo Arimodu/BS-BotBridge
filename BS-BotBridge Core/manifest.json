@@ -1,11 +1,11 @@
 ﻿{
   "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
-  "id": "BS_BotBridge_Core",
+  "id": "BSBBCore",
   "name": "BS-BotBridge Core",
-  "author": "",
-  "version": "0.0.1",
+  "author": "Arimodu",
+  "version": "1.0.0",
   "description": "",
-  "gameVersion": "1.18.3",
+  "gameVersion": "1.28.0",
   "dependsOn": {
     "BSIPA": "^4.2.0",
     "SiraUtil": "^3.1.0"

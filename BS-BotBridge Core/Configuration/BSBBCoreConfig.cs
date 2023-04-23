@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using IPA.Config.Stores;
 
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
-namespace BS_BotBridge_Core.Configuration
+namespace BSBBCore.Configuration
 {
     public class BSBBCoreConfig
     {

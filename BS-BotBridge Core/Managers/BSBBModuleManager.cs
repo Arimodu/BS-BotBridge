@@ -1,10 +1,11 @@
-﻿using BSBBLib.Interfaces;
+﻿using BS_BotBridge_Core.Network;
+using BSBBCore.Interfaces;
 using SiraUtil.Logging;
 using System;
 using System.Collections.Generic;
 using Zenject;
 
-namespace BS_BotBridge_Core.Managers
+namespace BSBBCore.Managers
 {
     public class BSBBModuleManager
     {

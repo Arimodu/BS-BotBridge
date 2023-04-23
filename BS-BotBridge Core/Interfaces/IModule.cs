@@ -1,7 +1,7 @@
 ﻿using HMUI;
-using BSBBLib.Packets;
+using BSBBCore.Network.Packets;
 
-namespace BSBBLib.Interfaces
+namespace BSBBCore.Interfaces
 {
     public interface IModule
     {
