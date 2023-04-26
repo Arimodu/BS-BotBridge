@@ -1,4 +1,4 @@
-﻿using BSBBLib;
+﻿using BSBBCore.Network.Servers;
 using System;
 
 namespace SimpleTestServer
@@ -7,11 +7,13 @@ namespace SimpleTestServer
     {
         static void Main(string[] args)
         {
-            Server server = new Server((log) => Console.WriteLine(log));
+            ServerWrapper serverWrapper = new ServerWrapper((log) => Console.WriteLine(log), 3);
+
+            serverWrapper.Start();
 
             while (Console.ReadLine() != "stop") { }
 
-            server.Stop();
+            serverWrapper.Stop();
 
             Console.ReadLine();
         }

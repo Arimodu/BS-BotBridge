@@ -122,14 +122,20 @@
   <ItemGroup>
     <Compile Include="Interfaces\IClient.cs" />
     <Compile Include="Interfaces\IModule.cs" />
-    <Compile Include="Network\Client.cs" />
+    <Compile Include="Network\Clients\Client.cs" />
     <Compile Include="Installers\BSBBAppInstaller.cs" />
     <Compile Include="Installers\BSBBMenuInstaller.cs" />
     <Compile Include="Installers\BSBBModuleManagerInitializer.cs" />
     <Compile Include="Managers\BSBBModuleManager.cs" />
     <Compile Include="Managers\SettingsControllerManager.cs" />
+    <Compile Include="Network\Clients\ModuleClient.cs" />
+    <Compile Include="Network\ModuleClientState.cs" />
+    <Compile Include="Network\Servers\ModuleServer.cs" />
+    <Compile Include="Network\Packets\IdentPacket.cs" />
     <Compile Include="Network\Packets\Packet.cs" />
-    <Compile Include="Network\Server.cs" />
+    <Compile Include="Network\Servers\GameServer.cs" />
+    <Compile Include="Network\Servers\ServerWrapper.cs" />
+    <Compile Include="Network\StandaloneLogger.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Configuration\BSBBCoreConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

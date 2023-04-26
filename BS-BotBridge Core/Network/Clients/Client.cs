@@ -37,6 +37,7 @@ namespace BS_BotBridge_Core.Network
             get => _state;
             private set
             {
+                if (_state == value) return;
                 _state = value;
                 OnStateChanged?.Invoke(value);
             }

@@ -50,9 +50,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BSBBLib\BSBBLib.csproj">
-      <Project>{7d2cf96d-2443-4125-aa53-b962307fc52a}</Project>
-      <Name>BSBBLib</Name>
+    <ProjectReference Include="..\BS-BotBridge Core\BS-BotBridge Core.csproj">
+      <Project>{0a6484e8-126e-4568-8344-0e9318af092b}</Project>
+      <Name>BS-BotBridge Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
